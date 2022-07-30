@@ -1,0 +1,28 @@
+version: “3.8"
+
+services:
+  mariadb:
+    container_name: mariadb
+    build: ./requirement/mariadb
+    restart: always
+    env_file: .env
+    volumes:
+    networks:
+  wordpress:
+    container_name: wordpress
+    build: ./requirement/wordpress
+    restart: always
+    depends_on: mariadb
+    env_file: .env
+    volumes:
+    networks:
+  nginx:
+    container_name: nginx
+    build: ./requirements/nginx
+    restart: unless-stopped #check if it works
+    ports: 443:443
+    depend_on: wordpress
+    env_file: .env
+    volumes:
+    networks:
+
