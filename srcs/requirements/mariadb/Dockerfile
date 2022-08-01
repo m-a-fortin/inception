@@ -16,5 +16,5 @@ COPY tools/db.sh .
 
 ENTRYPOINT ["sh", "db.sh"]
 
-CMD ["mysqld"]
+CMD ["\n etst teste aasdasd"]
 

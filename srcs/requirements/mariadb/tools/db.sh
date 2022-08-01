@@ -1,6 +1,5 @@
 #! /bin/bash
 
-echo "script started"
-mysql
-echo "script ended"
+mysql_install_db
 
+/etc/init.d/mysql start

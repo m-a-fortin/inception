@@ -1,28 +1,46 @@
+---
 version: “3.8"
 
 services:
   mariadb:
     container_name: mariadb
-    build: ./requirement/mariadb
+    build: ./requirements/mariadb
     restart: always
     env_file: .env
     volumes:
+      - db_data:/var/lib/mysql #name:path in container
     networks:
   wordpress:
     container_name: wordpress
-    build: ./requirement/wordpress
+    build: ./requirements/wordpress
     restart: always
     depends_on: mariadb
     env_file: .env
     volumes:
+      - web_data:/var/www/html/wordpress
     networks:
   nginx:
     container_name: nginx
     build: ./requirements/nginx
-    restart: unless-stopped #check if it works
-    ports: 443:443
+    restart: unless-stopped
+    ports: 
+      - 443:443
     depend_on: wordpress
     env_file: .env
     volumes:
+      - web_data:/var/www/html/wordpress
     networks:
+volumes: #list of volumes
+  db_data:
+    driver: local #default volume driver
+    driver_opts: #options
+      device: ${VOLUMES_PATH}/db #HOST PATH
+      type: bind #because of the subject. we need to have an external directory already created on the host
+      RW: true #read write
+  web_data:
+      driver: local #default volume driver
+      driver_opts: #options
+      device: ${VOLUMES_PATH}/db #HOST PATH
+      type: bind #because of the subject. we need to have an external directory already created on the host
+      RW: true #read write
 
