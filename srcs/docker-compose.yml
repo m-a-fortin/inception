@@ -1,5 +1,5 @@
 ---
-version: “3.8"
+version: '3.8'
 
 services:
   mariadb:
@@ -10,37 +10,44 @@ services:
     volumes:
       - db_data:/var/lib/mysql #name:path in container
     networks:
+      - docker_network
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
     restart: always
-    depends_on: mariadb
+    depends_on:
+      - mariadb
     env_file: .env
     volumes:
       - web_data:/var/www/html/wordpress
     networks:
+      - docker_network
   nginx:
     container_name: nginx
     build: ./requirements/nginx
     restart: unless-stopped
     ports: 
       - 443:443
-    depend_on: wordpress
+    depends_on: 
+      - wordpress
     env_file: .env
     volumes:
       - web_data:/var/www/html/wordpress
     networks:
+      - docker_network
 volumes: #list of volumes
   db_data:
     driver: local #default volume driver
     driver_opts: #options
-      device: ${VOLUMES_PATH}/db #HOST PATH
       type: bind #because of the subject. we need to have an external directory already created on the host
-      RW: true #read write
+      device: ${VOLUMES_PATH}/db #HOST PATH
   web_data:
       driver: local #default volume driver
       driver_opts: #options
-      device: ${VOLUMES_PATH}/db #HOST PATH
-      type: bind #because of the subject. we need to have an external directory already created on the host
-      RW: true #read write
+        type: bind #because of the subject. we need to have an external directory already created on the host
+        device: ${VOLUMES_PATH}/db #HOST PATH
+networks:
+  docker_network:
+    driver: bridge #not connected to host, they all have their own ip and they use it to connect (virtual ethernet)
+
 
