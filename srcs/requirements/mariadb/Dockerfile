@@ -8,8 +8,13 @@ RUN apk add --update mariadb mariadb-client
 
 WORKDIR /tmp/mariadb/
 
-COPY tools/db_script.sh .
+RUN mkdir /run/mysqld
 
-#ENTRYPOINT ["sh", "db_script.sh"]
+RUN chmod 777 /run/mysqld
 
-CMD ["mysqld", "-V"]
+COPY tools/db.sh .
+
+ENTRYPOINT ["sh", "db.sh"]
+
+CMD ["mysqld"]
+
