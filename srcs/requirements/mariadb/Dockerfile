@@ -12,4 +12,4 @@ COPY tools/db_script.sh .
 
 #ENTRYPOINT ["sh", "db_script.sh"]
 
-CMD ["mysqld"]
+CMD ["mysqld", "-V"]
