@@ -1,20 +1,18 @@
-FROM alpine:3.15
+
+FROM debian:buster
+
+
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y mariadb-server mariadb-client
 
 EXPOSE 3306
 
-RUN apk update && apk upgrade
-
-RUN apk add --update mariadb mariadb-client
-
-WORKDIR /tmp/mariadb/
-
-RUN mkdir /run/mysqld
-
-RUN chmod 777 /run/mysqld
+LABEL version="1.0"
+LABEL description="MariaDB"
 
 COPY tools/db.sh .
-
 ENTRYPOINT ["sh", "db.sh"]
 
-CMD ["\n etst teste aasdasd"]
+#CMD ["mysqld", "--bind-adress=0.0.0.0"]
+
 
