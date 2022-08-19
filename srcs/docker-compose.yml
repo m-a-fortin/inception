@@ -7,8 +7,8 @@ services:
     build: ./requirements/mariadb
     restart: always
     env_file: .env
-    volumes:
-      - db_data:/var/lib/mysql #name:path in container
+    #volumes:
+     # - db_data:/var/lib/mysql #name:path in container
     networks:
       - docker_network
   wordpress:
@@ -18,8 +18,8 @@ services:
     depends_on:
       - mariadb
     env_file: .env
-    volumes:
-      - web_data:/var/www/html/wordpress
+    #volumes:
+     # - web_data:/var/www/html/wordpress
     networks:
       - docker_network
   nginx:
@@ -31,8 +31,8 @@ services:
     depends_on: 
       - wordpress
     env_file: .env
-    volumes:
-      - web_data:/var/www/html/wordpress
+ #   volumes:
+  #    - web_data:/var/www/html/wordpress
     networks:
       - docker_network
 volumes: #list of volumes
@@ -40,12 +40,12 @@ volumes: #list of volumes
     driver: local #default volume driver
     driver_opts: #options
       type: bind #because of the subject. we need to have an external directory already created on the host
-      device: ${VOLUMES_PATH}/db #HOST PATH
+      device: /home/mafortin/data/db #HOST PATH
   web_data:
       driver: local #default volume driver
       driver_opts: #options
         type: bind #because of the subject. we need to have an external directory already created on the host
-        device: ${VOLUMES_PATH}/db #HOST PATH
+        device: /home/mafortin/data/web #HOST PATH
 networks:
   docker_network:
     driver: bridge #not connected to host, they all have their own ip and they use it to connect (virtual ethernet)
