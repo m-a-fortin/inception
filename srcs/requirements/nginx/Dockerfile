@@ -1,6 +1,9 @@
 
 FROM debian:buster
 
+LABEL version="1.0"
+LABEL description="Nginx"
+
 EXPOSE 443
 
 RUN apt-get update && apt-get upgrade -y

@@ -1,14 +1,27 @@
 FROM debian:buster
 
+LABEL version="1.0"
+LABEL description="Wordpress"
+
 EXPOSE 9000
 
-RUN apk update && apk upgrade
+RUN apt-get update  && apt-get upgrade -y
 
-RUN apk add php7-fpm php7-common php7-mysqli \
-php7-xml php7-xmlrpc php7-curl php7-gd \
-php7-imagick php7-cli php7-dev php7-imap \
-php7-mbstring php7-opcache php7-redis \
-php7-soap php7-zip
+RUN apt-get install -y php-fpm php-mysql mariadb-client wget
 
-CMD ["php-fpm7", "-v"]
-  
+
+RUN mkdir -p /var/www
+RUN chmod 777 -R /var/www
+ 
+
+WORKDIR /var/www
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN chmod +x wp-cli.phar
+RUN mv wp-cli.phar /usr/bin/wp
+
+COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+COPY ./tools/init_wordpress.sh .
+
+ENTRYPOINT ["bash", "init_wordpress.sh"]
+
+CMD ["php-fpm7.3", "-v"]
