@@ -13,7 +13,6 @@ if [ ! -d "./wp_is_installed.tmp" ]; then
 	echo "WORDPRESS DOWNLOADED AND EXTRACTED"
 	mv wordpress html
 	touch ./wp_is_installed.tmp
-
 fi
 
 tail -f
