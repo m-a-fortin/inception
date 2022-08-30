@@ -15,14 +15,12 @@ build:
 	@docker compose -f srcs/docker-compose.yml build
 
 clean:
-	sudo rm -rf /home/mafortin/data/mariadb/*
-	sudo rm -rf /home/mafortin/data/wordpress/*
-	@docker-compose -f srcs/docker-compose.yml down --rmi all
+	sudo rm -rf /home/mafortin/data/db/*
+	sudo rm -rf /home/mafortin/data/web/*
+	@chmod +x ./clean.sh
+	@./clean.sh
 
-vclean:
-	@docker volume rm $(shell docker volume ls -q)
-
-fclean:	clean vclean
+fclean:	clean
 
 re: fclean all
 

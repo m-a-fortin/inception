@@ -1,26 +1,24 @@
-
-FROM debian:buster
-
-LABEL version="1.0"
-LABEL description="Nginx"
+FROM alpine:3.15
 
 EXPOSE 443
 
-RUN apt-get update && apt-get upgrade -y
+RUN apk update && apk upgrade && apk add nginx openssl net-tools
 
-RUN apt-get install -y nginx openssl
 
-COPY ./conf/default.conf ./etc/nginx/http.d/default.conf
 
-RUN cat ./etc/nginx/http.d/default.conf
+RUN mkdir -p /var/www/html
+RUN mkdir -p /etc/ssl/private
+RUN mkdir -p /etc/ssl/certs
 
-#https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-18-04
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
- -subj "/CN=mafortin.42.fr/C=CA/ST=Quebec/L=Quebec City/O=42 Network/OU=42 Quebec" \
- -keyout /etc/ssl/private/nginx-selfsigned.key -out \
- /etc/ssl/certs/nginx-selfsigned.crt
+COPY ./conf/default.conf /etc/nginx/http.d/default.conf
 
-#-g daemon off; option allows us to run nginx in foreground allowing us to loop the container
-#src = https://stackoverflow.com/questions/18861300/how-to-run-nginx-within-a-docker-container-without-halting
+RUN openssl req -x509 \ 
+				-nodes \
+				-sha256 \
+				-days 3650 \
+				-newkey rsa:2048 \
+				-subj "/CN=mafortin.42.fr/C=CA/ST=Quebec/L=Quebec City/O=42 Network/OU=42 Quebec" \
+				-keyout /etc/ssl/private/nginx_ssl.key \
+				-out /etc/ssl/certs/nginx_cert.crt
+
 CMD ["nginx", "-g", "daemon off;"]
-
