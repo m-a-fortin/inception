@@ -50,6 +50,5 @@ volumes: #list of volumes
       device: /home/mafortin/data/web #HOST PATH
 networks:
   docker_network:
-    name: docker_network
     driver: bridge #not connected to host, they all have their own ip and they use it to connect (virtual ethernet)
 

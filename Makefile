@@ -3,7 +3,7 @@ all: main
 main:
 	mkdir -p /home/mafortin/data/mariadb/
 	mkdir -p /home/mafortin/data/wordpress/
-	@docker-compose -f srcs/docker-compose.yml up --build
+	@docker compose -f srcs/docker-compose.yml up --build
 
 up:
 	@docker compose -f srcs/docker-compose.yml up
